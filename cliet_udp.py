@@ -9,7 +9,7 @@ def esperar(partita_iniciada):
     print()
 
     if partita_iniciada == qtd_clientes:
-        print("Aguardando Jogadores \r\n")
+        print("Aguardando Jogadores... \r\n")
         resposta_servidor = socket_cliente.recvfrom(1024)
 
         print(str(resposta_servidor[0].decode()))
