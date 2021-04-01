@@ -27,7 +27,7 @@ def responder():
             mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10)
         except TimeoutOccurred:
             print("Tempo esgotado.")
-            mensagem = "Não houve resposta"
+            mensagem = "nao respondeu"
         
         mensagem_codificada = mensagem.encode()
         socket_cliente.sendto(mensagem_codificada, ("localhost", 9090))
