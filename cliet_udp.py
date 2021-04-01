@@ -26,7 +26,7 @@ def responder():
         try:
             mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10)
         except TimeoutOccurred:
-            print("Tempo esgotado.")
+            print("Tempo esgotado")
             mensagem = "nao respondeu"
         
         mensagem_codificada = mensagem.encode()
