@@ -30,11 +30,6 @@ def particao(vetor, indiceinicial, indiceparada):
     return indice_de_inicio
 
 
-def tempoLimite():
-    for _ in range(5):
-        time.sleep(1)
-    print("fim")
-    return True
 
 
 def ler_arquivo():
@@ -105,12 +100,14 @@ def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
 
             socket_servidor.sendto(resposta_1_cliente, (k))
         else:
-            print(f'contador {contador}, valor {valor}')
-            print(
-                f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
-            participantes[k][1] -= 5
-            resposta_1_cliente = str.encode(
-                f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
+            if v == "nao respondeu":
+                participantes[k][1] -= 1
+            else:
+                participantes[k][1] -= 5
+
+            print(f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
+
+            resposta_1_cliente = str.encode(f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
             socket_servidor.sendto(resposta_1_cliente, (k))
 
     valor += 1
@@ -155,9 +152,7 @@ def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
                     f"A pontuação do(a) jogardor(a) {x[0].decode()} foi de: {x[1]} pontos.")
                 socket_servidor.sendto(classificacao, y)
 
-
-# implementar o time
-
+    
 
 perguntas_e_respostas = ler_arquivo()
 socket_servidor = socket(AF_INET, SOCK_DGRAM)
@@ -198,7 +193,8 @@ while conexao_start and len(participantes) < qtd_clientes:  # testando 2 cliente
 
 
 if len(participantes) == qtd_clientes:  # testando 2 cliente
-    print("200 OK \r\n")
+    confirmacao_partida = "200"
+    print(confirmacao_partida,"\r\n")
 
     mensagem_start = "O jogo vai começar!"
 

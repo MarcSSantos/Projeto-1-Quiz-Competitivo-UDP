@@ -24,10 +24,11 @@ def responder():
     if str(resposta_servidor[0].decode()) != "500":
         print(str(resposta_servidor[0].decode()))
         try:
-            mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=5)
+            mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10)
         except TimeoutOccurred:
+            print("Tempo esgotado")
             mensagem = "nao respondeu"
-
+        
         mensagem_codificada = mensagem.encode()
         socket_cliente.sendto(mensagem_codificada, ("localhost", 9090))
         print("Resposta enviada... \r\n")
@@ -38,16 +39,19 @@ def responder():
     else:
 
         print("\nFim de jogo. \n")
-        ranking()
+        ranking(qtd_clientes)
+ 
 
-
-def ranking():
+def ranking(qtd_clientes):
 
     print("Ranking")
-    for _ in range(2):  # testando 2 cliente
+    for _ in range(qtd_clientes):  # testando 2 cliente
         resposta_servidor = socket_cliente.recvfrom(1024)
         print(str(resposta_servidor[0].decode()))
     socket_cliente.close()
+    
+    
+    
 
 
 iniciar = True
