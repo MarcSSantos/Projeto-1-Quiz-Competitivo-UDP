@@ -5,10 +5,10 @@ import multiprocessing
 import time
 
 
-def esperar(partita_iniciada):
+def esperar(partida_iniciada):
     print()
 
-    if partita_iniciada == qtd_clientes:
+    if partida_iniciada == qtd_clientes:
         print("Aguardando Jogadores... \r\n")
         resposta_servidor = socket_cliente.recvfrom(1024)
 
@@ -27,7 +27,7 @@ def responder():
             mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10)
         except TimeoutOccurred:
             print("Tempo esgotado.")
-            mensagem = "nao respondeu"
+            mensagem = "Sem nenhuma resposta"
         
         mensagem_codificada = mensagem.encode()
         socket_cliente.sendto(mensagem_codificada, ("localhost", 9090))
@@ -59,7 +59,7 @@ socket_cliente = socket(AF_INET, SOCK_DGRAM)
 
 qtd_clientes = 2
 
-partita_iniciada = []
+partida_iniciada = []
 while iniciar:
     print()
     mensagem = input("Digite o seu login para se conectar: ")
@@ -68,19 +68,19 @@ while iniciar:
         socket_cliente.sendto(mensagem_codificada, ("localhost", 9090))
         resposta_servidor = socket_cliente.recvfrom(1024)
 
-        if partita_iniciada == []:
+        if partida_iniciada == []:
             cont = 0
-            partita_iniciada.append(cont)
+            partida_iniciada.append(cont)
 
         if str(resposta_servidor[0].decode()) == "101":
             print(f"O(A) jogadoror(a) {mensagem} foi Cadastrado(a).")
 
             iniciar = False
 
-            partita_iniciada[0] += qtd_clientes
+            partida_iniciada[0] += qtd_clientes
             # tentando com 2 mudar para 5 depois
-            if partita_iniciada[0] <= qtd_clientes:
-                Thread(target=esperar, args=(partita_iniciada)).start()
+            if partida_iniciada[0] <= qtd_clientes:
+                Thread(target=esperar, args=(partida_iniciada)).start()
 
         else:
 
