@@ -172,32 +172,42 @@ contador_indice_pergunta = 0
 conexao_start = True
 valor = 0
 participantes = {}
-qtd_clientes = 2
-
-
+qtd_clientes = 0
+max_jogadores = 5
+min_jogadores = 1
+aceitar_mais_jogadores = True
 # testando com 2
 
-while conexao_start and len(participantes) < qtd_clientes:  # testando 2 cliente
+while conexao_start and len(participantes) < max_jogadores and aceitar_mais_jogadores == True :  # máximo de clientes
 
     print()
     print("Aguardando requisições... \r\n")
+    try:
+        socket_servidor.settimeout(15)
+        #qtd_clientes=len(participantes)
+        mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
+        participantes[endereco_cliente] = [mensagem_cliente, 0]
+        print(f"O/A participante {mensagem_cliente.decode()} entrou")
+        resposta = "101"
+        resposta_cliente = str.encode(resposta)
+        socket_servidor.sendto(resposta_cliente, endereco_cliente)
+        print("Resposta enviada para o/a participante \r\n")
+    except:
+        qtd_clientes=len(participantes)
+        aceitar_mais_jogadores = False
 
-    mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
-    participantes[endereco_cliente] = [mensagem_cliente, 0]
-    print(f"O/A participante {mensagem_cliente.decode()} entrou")
-
-    resposta = "101"
-    resposta_cliente = str.encode(resposta)
-    socket_servidor.sendto(resposta_cliente, endereco_cliente)
-    print("Resposta enviada para o/a participante \r\n")
+    qtd_clientes=len(participantes)
 
 
-if len(participantes) == qtd_clientes:  # testando 2 cliente
+if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:  # testando 2 cliente
     confirmacao_partida = "200"
     print(confirmacao_partida,"\r\n")
 
     mensagem_start = "O jogo vai começar!"
 
     Thread(target=perguntas, args=(mensagem_start, participantes, valor)).start()
+
+else:
+    print('Não há jogadores suficientes para começar a partida.')
 
 # Até aqui deu certo, amém
