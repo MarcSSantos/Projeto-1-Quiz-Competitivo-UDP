@@ -30,8 +30,6 @@ def particao(vetor, indiceinicial, indiceparada):
     return indice_de_inicio
 
 
-
-
 def ler_arquivo():
 
     arquivo = open("perguntas_respostas.txt", "r")
@@ -105,9 +103,11 @@ def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
             else:
                 participantes[k][1] -= 5
 
-            print(f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
+            print(
+                f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
 
-            resposta_1_cliente = str.encode(f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
+            resposta_1_cliente = str.encode(
+                f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
             socket_servidor.sendto(resposta_1_cliente, (k))
 
     valor += 1
@@ -146,13 +146,16 @@ def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
 
         ordena_listao = quicksort(listao)
 
+        totalJogadores = str(qtd_clientes).encode()
+        for p in participantes.keys():
+            socket_servidor.sendto(totalJogadores, p)
+
         for x in listao:
             for y in participantes.keys():
                 classificacao = str.encode(
                     f"A pontuação do(a) jogardor(a) {x[0].decode()} foi de: {x[1]} pontos.")
                 socket_servidor.sendto(classificacao, y)
 
-    
 
 perguntas_e_respostas = ler_arquivo()
 socket_servidor = socket(AF_INET, SOCK_DGRAM)
@@ -178,12 +181,13 @@ min_jogadores = 1
 aceitar_mais_jogadores = True
 # testando com 2
 
-while conexao_start and len(participantes) < max_jogadores and aceitar_mais_jogadores == True :  # máximo de clientes
+# máximo de clientes
+while conexao_start and len(participantes) < max_jogadores and aceitar_mais_jogadores == True:
 
     print()
-    print("Aguardando requisições... \r\n")
     try:
-        socket_servidor.settimeout(15)
+        print("Aguardando requisições... \r\n")
+        socket_servidor.settimeout(10)
         #qtd_clientes=len(participantes)
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         participantes[endereco_cliente] = [mensagem_cliente, 0]
@@ -193,15 +197,15 @@ while conexao_start and len(participantes) < max_jogadores and aceitar_mais_joga
         socket_servidor.sendto(resposta_cliente, endereco_cliente)
         print("Resposta enviada para o/a participante \r\n")
     except:
-        qtd_clientes=len(participantes)
+        qtd_clientes = len(participantes)
         aceitar_mais_jogadores = False
 
-    qtd_clientes=len(participantes)
+    qtd_clientes = len(participantes)
 
 
 if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:  # testando 2 cliente
     confirmacao_partida = "200"
-    print(confirmacao_partida,"\r\n")
+    print(confirmacao_partida, "\r\n")
 
     mensagem_start = "O jogo vai começar!"
 

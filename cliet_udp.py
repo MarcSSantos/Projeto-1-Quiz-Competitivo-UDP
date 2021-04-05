@@ -28,7 +28,7 @@ def responder():
         except TimeoutOccurred:
             print("Tempo esgotado.")
             mensagem = "Sem nenhuma resposta"
-        
+
         mensagem_codificada = mensagem.encode()
         socket_cliente.sendto(mensagem_codificada, ("localhost", 9090))
         print("Resposta enviada... \r\n")
@@ -39,19 +39,20 @@ def responder():
     else:
 
         print("\nFim de jogo. \n")
-        ranking(qtd_clientes)
- 
+        resposta_servidor = socket_cliente.recvfrom(1024)
+        #print(resposta_servidor[0].decode())
+        totalJogadores = int(resposta_servidor[0].decode())
 
-def ranking(qtd_clientes):
+        ranking(totalJogadores)
+
+
+def ranking(totalJogadores):
 
     print("Ranking")
-    for _ in range(qtd_clientes):  # testando 2 cliente
+    for _ in range(totalJogadores):  # testando 2 cliente
         resposta_servidor = socket_cliente.recvfrom(1024)
         print(str(resposta_servidor[0].decode()))
     socket_cliente.close()
-    
-    
-    
 
 
 iniciar = True
