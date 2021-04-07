@@ -2,8 +2,6 @@ from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
 from inputimeout import inputimeout, TimeoutOccurred
 import random
-import multiprocessing
-import time
 
 
 def quicksort(vetor, indiceinicial=0, indiceparada=None):
@@ -152,7 +150,7 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
                 classificacao = str.encode(
                     f"A pontuação do(a) jogardor(a) {x[0].decode()} foi de: {x[1]} pontos.")
                 socket_servidor.sendto(classificacao, y)
-
+        socket_servidor.close()
 
 perguntas_e_respostas = ler_arquivo()
 socket_servidor = socket(AF_INET, SOCK_DGRAM)
@@ -182,7 +180,7 @@ while conexao_start and len(participantes) < max_jogadores and aceitar_mais_joga
     print()
     try:
         print("Aguardando requisições... \r\n")
-        socket_servidor.settimeout(10)
+        socket_servidor.settimeout(20)
         
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         participantes[endereco_cliente] = [mensagem_cliente, 0]

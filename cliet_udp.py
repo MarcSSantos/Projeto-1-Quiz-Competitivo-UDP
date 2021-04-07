@@ -1,8 +1,7 @@
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
 from inputimeout import inputimeout, TimeoutOccurred
-import multiprocessing
-import time
+
 
 
 def esperar(partida_iniciada):
