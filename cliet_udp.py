@@ -40,7 +40,6 @@ def responder():
 
         print("\nFim de jogo. \n")
         resposta_servidor = socket_cliente.recvfrom(1024)
-        #print(resposta_servidor[0].decode())
         totalJogadores = int(resposta_servidor[0].decode())
 
         ranking(totalJogadores)
@@ -58,7 +57,7 @@ def ranking(totalJogadores):
 iniciar = True
 socket_cliente = socket(AF_INET, SOCK_DGRAM)
 
-qtd_clientes = 2
+qtd_clientes = 2 #testando com 2 clientes alterar para 5 no final do projeto
 
 partida_iniciada = []
 while iniciar:
@@ -79,7 +78,7 @@ while iniciar:
             iniciar = False
 
             partida_iniciada[0] += qtd_clientes
-            # tentando com 2 mudar para 5 depois
+            
             if partida_iniciada[0] <= qtd_clientes:
                 Thread(target=esperar, args=(partida_iniciada)).start()
 

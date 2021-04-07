@@ -50,20 +50,17 @@ def ler_arquivo():
     return lista_tuplas
 
 
-def perguntas(mensagem_cliente, participantes, valor):
+def iniciarPerguntas(mensagem_cliente, participantes, valor):
 
     for endereco in participantes.keys():
         socket_servidor.sendto(str.encode(mensagem_cliente), (endereco))
         print("A pergunta foi enviada aos jogadores \n")
 
-    respostas(participantes, perguntas_e_respostas,
+    pergutaResposta(participantes, perguntas_e_respostas,
               valor, contador_indice_pergunta, sub_lista_n_pergunta)
 
-# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-
-def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
+def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indicesP):
 
     for endereco in participantes:
         pergunta = str.encode(
@@ -113,9 +110,9 @@ def respostas(participantes, perguntas_e_respostas, valor, contador, indicesP):
     valor += 1
     contador += 1
 
-    if valor != 3 and contador != 3:  # aq define a quantidade de perguntas
+    if valor != 3 and contador != 3:  #Definição de quantidade de iniciarPerguntas
 
-        Thread(target=respostas, args=(participantes,
+        Thread(target=pergutaResposta, args=(participantes,
                perguntas_e_respostas, valor, contador, indicesP)).start()
 
     else:
@@ -179,16 +176,14 @@ qtd_clientes = 0
 max_jogadores = 5
 min_jogadores = 1
 aceitar_mais_jogadores = True
-# testando com 2
 
-# máximo de clientes
 while conexao_start and len(participantes) < max_jogadores and aceitar_mais_jogadores == True:
 
     print()
     try:
         print("Aguardando requisições... \r\n")
         socket_servidor.settimeout(10)
-        #qtd_clientes=len(participantes)
+        
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         participantes[endereco_cliente] = [mensagem_cliente, 0]
         print(f"O/A participante {mensagem_cliente.decode()} entrou")
@@ -203,15 +198,15 @@ while conexao_start and len(participantes) < max_jogadores and aceitar_mais_joga
     qtd_clientes = len(participantes)
 
 
-if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:  # testando 2 cliente
+if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:  
     confirmacao_partida = "200"
     print(confirmacao_partida, "\r\n")
 
     mensagem_start = "O jogo vai começar!"
 
-    Thread(target=perguntas, args=(mensagem_start, participantes, valor)).start()
+    Thread(target=iniciarPerguntas, args=(mensagem_start, participantes, valor)).start()
 
 else:
     print('Não há jogadores suficientes para começar a partida.')
 
-# Até aqui deu certo, amém
+
