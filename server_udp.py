@@ -55,8 +55,7 @@ def iniciarPerguntas(mensagem_cliente, participantes, valor):
         socket_servidor.sendto(str.encode(mensagem_cliente), (endereco))
         print("A pergunta foi enviada aos jogadores \n")
 
-    pergutaResposta(participantes, perguntas_e_respostas,
-              valor, contador_indice_pergunta, sub_lista_n_pergunta)
+    pergutaResposta(participantes, perguntas_e_respostas, valor, contador_indice_pergunta, sub_lista_n_pergunta)
 
 
 def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indicesP):
@@ -73,24 +72,20 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         if endereco_cliente in participantes.keys():
             dic_resposta[endereco_cliente] = mensagem_cliente.decode()
-            print(
-                f"MSG: {mensagem_cliente.decode()} do(a) jogador(a) {participantes[endereco_cliente][0].decode()}")
+            print(f"MSG: {mensagem_cliente.decode()} do(a) jogador(a) {participantes[endereco_cliente][0].decode()}")
             qtd_msg += 1
 
         else:
             resposta_negação = "410"
             print(">>>Jogador tentando se conetar, mas foi recusado<<<")
-            socket_servidor.sendto(
-                resposta_negação.encode(), (endereco_cliente))
+            socket_servidor.sendto(resposta_negação.encode(), (endereco_cliente))
 
     for k, v in dic_resposta.items():
         if v == perguntas_e_respostas[indicesP[contador]][1]:
 
-            print(
-                f"O(A) jogador(a) {participantes[k][0].decode()} acertou a resposta")
+            print(f"O(A) jogador(a) {participantes[k][0].decode()} acertou a resposta")
             participantes[k][1] += 25
-            resposta_1_cliente = str.encode(
-                f"Parabéns! Você acertou a resposta e ganhou 25 pontos. Sua pontuação atual é {participantes[k][1]}")
+            resposta_1_cliente = str.encode(f"Parabéns! Você acertou a resposta e ganhou 25 pontos. Sua pontuação atual é {participantes[k][1]}")
 
             socket_servidor.sendto(resposta_1_cliente, (k))
         else:
@@ -99,11 +94,9 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
             else:
                 participantes[k][1] -= 5
 
-            print(
-                f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
+            print(f"O(A) jogador(a) {participantes[k][0].decode()} errou a resposta")
 
-            resposta_1_cliente = str.encode(
-                f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
+            resposta_1_cliente = str.encode(f"Infelizmente, você errou a resposta e perdeu 5 pontos. Sua pontuação atual é {participantes[k][1]}\n")
             socket_servidor.sendto(resposta_1_cliente, (k))
 
     valor += 1
@@ -115,22 +108,7 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
                perguntas_e_respostas, valor, contador, indicesP)).start()
 
     else:
-        lista_pontos = []
-
-        for k, v in participantes.items():
-            pontuação = v[1]
-            lista_pontos.append(pontuação)
-
-        lista_pontos_ordenada = sorted(lista_pontos)
-        lista_ordenada = []
-        cont = 0
-
-        while len(lista_ordenada) < len(participantes):
-            for v in participantes.values():
-                if v[1] == lista_pontos_ordenada[cont]:
-                    lista_ordenada.append(v[1])
-            cont += 1
-
+ 
         resposta = "500"
         resposta_cliente = str.encode(resposta)
         for x, y in dic_resposta.items():
@@ -153,9 +131,9 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
                 socket_servidor.sendto(classificacao, y)
         socket_servidor.close()
 
-perguntas_e_respostas = ler_arquivo()
 socket_servidor = socket(AF_INET, SOCK_DGRAM)
 socket_servidor.bind(("localhost", 9090))
+perguntas_e_respostas = ler_arquivo()
 
 # implementação randomificação
 sub_lista_n_pergunta = []
@@ -205,5 +183,5 @@ if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:
 
 else:
     print('Não há jogadores suficientes para começar a partida.')
-
+    socket_servidor.close()
 
