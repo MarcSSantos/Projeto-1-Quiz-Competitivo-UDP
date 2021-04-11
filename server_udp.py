@@ -4,6 +4,7 @@ from inputimeout import inputimeout, TimeoutOccurred
 import random
 
 
+
 def quicksort(vetor, indiceinicial=0, indiceparada=None):
     if indiceparada == None:
         indiceparada = len(vetor) - 1
@@ -67,7 +68,7 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
 
     qtd_msg = 0
     dic_resposta = {}
-    while qtd_msg < qtd_clientes:  # testando 2 cliente
+    while qtd_msg < qtd_clientes:  
 
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         if endereco_cliente in participantes.keys():
@@ -108,7 +109,7 @@ def pergutaResposta(participantes, perguntas_e_respostas, valor, contador, indic
     valor += 1
     contador += 1
 
-    if valor != 3 and contador != 3:  #Definição de quantidade de iniciarPerguntas
+    if valor != 5 and contador != 5:  #Definição de quantidade de iniciarPerguntas
 
         Thread(target=pergutaResposta, args=(participantes,
                perguntas_e_respostas, valor, contador, indicesP)).start()
@@ -158,13 +159,13 @@ socket_servidor.bind(("localhost", 9090))
 
 # implementação randomificação
 sub_lista_n_pergunta = []
-while len(sub_lista_n_pergunta) < 3:
-    indice_aleatorio = random.randint(0, 2)
+while len(sub_lista_n_pergunta) < 20:
+    indice_aleatorio = random.randint(0, 19)
 
     if indice_aleatorio not in sub_lista_n_pergunta:
         sub_lista_n_pergunta.append(indice_aleatorio)
 
-# -------------------------------------------------
+
 
 contador_indice_pergunta = 0
 conexao_start = True
@@ -180,7 +181,7 @@ while conexao_start and len(participantes) < max_jogadores and aceitar_mais_joga
     print()
     try:
         print("Aguardando requisições... \r\n")
-        socket_servidor.settimeout(20)
+        socket_servidor.settimeout(20) #tempo para incrição de participantes
         
         mensagem_cliente, endereco_cliente = socket_servidor.recvfrom(1024)
         participantes[endereco_cliente] = [mensagem_cliente, 0]
@@ -197,10 +198,8 @@ while conexao_start and len(participantes) < max_jogadores and aceitar_mais_joga
 
 
 if len(participantes) == qtd_clientes and len(participantes) >= min_jogadores:  
-    confirmacao_partida = "200"
-    print(confirmacao_partida, "\r\n")
-
-    mensagem_start = "O jogo vai começar!"
+   
+    mensagem_start = "Quiz de conhecimentos gerais comecou!"
 
     Thread(target=iniciarPerguntas, args=(mensagem_start, participantes, valor)).start()
 

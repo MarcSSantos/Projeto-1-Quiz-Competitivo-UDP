@@ -3,7 +3,6 @@ from threading import Thread
 from inputimeout import inputimeout, TimeoutOccurred
 
 
-
 def esperar(partida_iniciada):
     print()
 
@@ -23,7 +22,7 @@ def responder():
     if str(resposta_servidor[0].decode()) != "500":
         print(str(resposta_servidor[0].decode()))
         try:
-            mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10)
+            mensagem = inputimeout(prompt="Digite sua resposta: ", timeout=10) #tempo para o jogador responder uma pergunta
         except TimeoutOccurred:
             print("Tempo esgotado.")
             mensagem = "Sem nenhuma resposta"
@@ -47,7 +46,7 @@ def responder():
 def ranking(totalJogadores):
 
     print("Ranking")
-    for _ in range(totalJogadores):  # testando 2 cliente
+    for _ in range(totalJogadores): 
         resposta_servidor = socket_cliente.recvfrom(1024)
         print(str(resposta_servidor[0].decode()))
     socket_cliente.close()
@@ -56,7 +55,7 @@ def ranking(totalJogadores):
 iniciar = True
 socket_cliente = socket(AF_INET, SOCK_DGRAM)
 
-qtd_clientes = 2 #testando com 2 clientes alterar para 5 no final do projeto
+qtd_clientes = 5 
 
 partida_iniciada = []
 while iniciar:
